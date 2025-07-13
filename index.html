@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -5,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>اتفاقية علي وياسمين</title>
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <style>
     body {
       margin: 0;
@@ -46,21 +48,11 @@
       text-align: center;
       margin-top: 10px;
       color: #222;
-      animation: slideDown 1s ease forwards;
-    }
-    @keyframes slideDown {
-      from { opacity: 0; transform: translateY(-30px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: scale(0.9); }
-      to { opacity: 1; transform: scale(1); }
     }
     p, ol {
       line-height: 1.8;
       font-size: 16px;
       color: #444;
-      animation: fadeIn 2s ease-in;
     }
     ol {
       padding-right: 20px;
@@ -102,12 +94,22 @@
       font-size: 14px;
       margin-top: 30px;
       color: #666;
-      animation: fadeIn 2s ease-in;
+    }
+    .download-btn {
+      display: block;
+      margin: 20px auto;
+      background: linear-gradient(to right, #005c97, #363795);
+    }
+    .counter {
+      text-align: center;
+      margin-top: 10px;
+      font-weight: bold;
+      color: #555;
     }
   </style>
 </head>
 <body>
-  <div class="card">
+  <div class="card" id="agreementCard">
     <div class="ay-badge">A & Y</div>
     <h2>اتفاقية علي وياسمين</h2>
     <p><strong>الطرف الأول:</strong> علي البيك<br>
@@ -123,6 +125,8 @@
       <li>في حال حدوث أي زعل أو سوء تفاهم، يتعهد الطرفان بمحاولة الحديث مع بعض بصراحة وشرح سبب الزعل بكل مرة، بهدف الفهم والصلح وعدم الكتمان.</li>
     </ol>
 
+    <div class="counter">مرّ <span id="daysCounter">0</span> يوم على توقيع الاتفاقية ❤️</div>
+
     <div class="signature-block">
       <p><strong>توقيع علي:</strong></p>
       <canvas id="signAli"></canvas>
@@ -136,6 +140,8 @@
       <img id="imgYasmeen" class="signature-img" />
       <button onclick="finalizeSignature('signYasmeen', 'imgYasmeen')">اعتمد التوقيع</button>
     </div>
+
+    <button class="download-btn" onclick="downloadAgreement()">تحميل الاتفاقية كاملة</button>
 
     <footer>© 2025 علي وياسمين</footer>
   </div>
@@ -207,8 +213,26 @@
       canvas.style.display = "none";
     }
 
+    function downloadAgreement() {
+      const target = document.getElementById("agreementCard");
+      html2canvas(target).then(canvas => {
+        const link = document.createElement("a");
+        link.download = "اتفاقية_علي_وياسمين.png";
+        link.href = canvas.toDataURL("image/png");
+        link.click();
+      });
+    }
+
+    function updateDaysCounter() {
+      const startDate = new Date("2025-07-13");
+      const today = new Date();
+      const diff = Math.floor((today - startDate) / (1000 * 60 * 60 * 24));
+      document.getElementById("daysCounter").textContent = diff;
+    }
+
     enableDrawing("signAli");
     enableDrawing("signYasmeen");
+    updateDaysCounter();
   </script>
 </body>
 </html>
