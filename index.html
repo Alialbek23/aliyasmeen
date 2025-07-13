@@ -27,32 +27,43 @@
       border-radius: 20px;
       box-shadow: 0 10px 30px rgba(0,0,0,0.1);
       position: relative;
+      animation: fadeIn 2s ease-in-out;
     }
     .ay-badge {
       position: absolute;
       top: -20px;
       right: 50%;
       transform: translateX(50%);
-      background: #333;
+      background: linear-gradient(to right, #111, #444);
       color: white;
       padding: 6px 18px;
       border-radius: 50px;
       font-weight: bold;
       letter-spacing: 2px;
+      box-shadow: 0 0 15px #aaa;
     }
     h2 {
       text-align: center;
       margin-top: 10px;
       color: #222;
+      animation: slideDown 1s ease forwards;
     }
-    p {
+    @keyframes slideDown {
+      from { opacity: 0; transform: translateY(-30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.9); }
+      to { opacity: 1; transform: scale(1); }
+    }
+    p, ol {
       line-height: 1.8;
       font-size: 16px;
       color: #444;
+      animation: fadeIn 2s ease-in;
     }
     ol {
       padding-right: 20px;
-      color: #444;
     }
     .signature-block {
       margin-top: 30px;
@@ -61,28 +72,37 @@
       border: 2px solid #aaa;
       border-radius: 8px;
       width: 100%;
-      max-width: 100%;
       height: 150px;
       background: #fefefe;
       touch-action: none;
     }
+    .signature-img {
+      display: none;
+      max-width: 100%;
+      border: 2px solid #aaa;
+      border-radius: 8px;
+      margin-top: 10px;
+    }
     button {
       margin-top: 8px;
       padding: 8px 16px;
-      background: #333;
+      background: linear-gradient(to right, #333, #666);
       color: white;
       border: none;
       border-radius: 5px;
       cursor: pointer;
+      transition: transform 0.2s, background 0.3s;
     }
     button:hover {
-      background: #555;
+      transform: scale(1.05);
+      background: linear-gradient(to right, #222, #555);
     }
     footer {
       text-align: center;
       font-size: 14px;
       margin-top: 30px;
       color: #666;
+      animation: fadeIn 2s ease-in;
     }
   </style>
 </head>
@@ -95,23 +115,26 @@
     <strong>تاريخ:</strong> 13/07/2025</p>
     <p>نحن الموقعين أدناه نقر على التالي:</p>
     <ol>
-      <li>عدم إرسال لايكات على واتساب.</li>
-      <li>إبلاغ الطرف الآخر فورًا في حال إرسال بالخطأ.</li>
-      <li>شرح سبب الزعل في كل خلاف.</li>
+      <li>الامتناع التام عن إرسال "لايكات" أو أي رمز تفاعل آخر عبر رسائل واتساب بين الطرفين.</li>
+      <li>في حال إرسال رمز تفاعل بالخطأ، يجب إبلاغ الطرف الآخر خلال 5 دقائق مع توضيح أنه تم بالخطأ.</li>
+      <li>يُمنع استخدام "اللايك" كوسيلة لإنهاء الحديث أو الهروب من الرد.</li>
+      <li>يتم مراجعة هذا الاتفاق كل شهر لضمان التزام الطرفين.</li>
+      <li>يعتمد هذا الاتفاق على الثقة والاحترام، وأي خرق متكرر يسمح بفتح نقاش صريح بين الطرفين.</li>
+      <li>في حال حدوث أي زعل أو سوء تفاهم، يتعهد الطرفان بمحاولة الحديث مع بعض بصراحة وشرح سبب الزعل بكل مرة، بهدف الفهم والصلح وعدم الكتمان.</li>
     </ol>
 
     <div class="signature-block">
       <p><strong>توقيع علي:</strong></p>
       <canvas id="signAli"></canvas>
-      <button onclick="clearCanvas('signAli')">مسح</button>
-      <button onclick="downloadSignature('signAli', 'ali-signature.png')">تحميل</button>
+      <img id="imgAli" class="signature-img" />
+      <button onclick="finalizeSignature('signAli', 'imgAli')">اعتمد التوقيع</button>
     </div>
 
     <div class="signature-block">
       <p><strong>توقيع ياسمين:</strong></p>
       <canvas id="signYasmeen"></canvas>
-      <button onclick="clearCanvas('signYasmeen')">مسح</button>
-      <button onclick="downloadSignature('signYasmeen', 'yasmeen-signature.png')">تحميل</button>
+      <img id="imgYasmeen" class="signature-img" />
+      <button onclick="finalizeSignature('signYasmeen', 'imgYasmeen')">اعتمد التوقيع</button>
     </div>
 
     <footer>© 2025 علي وياسمين</footer>
@@ -171,24 +194,17 @@
       canvas.addEventListener("mousemove", move);
       canvas.addEventListener("mouseup", stop);
       canvas.addEventListener("mouseleave", stop);
-
       canvas.addEventListener("touchstart", start, { passive: false });
       canvas.addEventListener("touchmove", move, { passive: false });
       canvas.addEventListener("touchend", stop);
     }
 
-    function clearCanvas(id) {
-      const canvas = document.getElementById(id);
-      const ctx = canvas.getContext("2d");
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-    }
-
-    function downloadSignature(id, filename) {
-      const canvas = document.getElementById(id);
-      const link = document.createElement("a");
-      link.download = filename;
-      link.href = canvas.toDataURL();
-      link.click();
+    function finalizeSignature(canvasId, imgId) {
+      const canvas = document.getElementById(canvasId);
+      const img = document.getElementById(imgId);
+      img.src = canvas.toDataURL();
+      img.style.display = "block";
+      canvas.style.display = "none";
     }
 
     enableDrawing("signAli");
