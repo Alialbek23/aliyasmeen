@@ -102,14 +102,14 @@
 
     <div class="signature-block">
       <p><strong>توقيع علي:</strong></p>
-      <canvas id="signAli" width="600" height="150"></canvas>
+      <canvas id="signAli"></canvas>
       <button onclick="clearCanvas('signAli')">مسح</button>
       <button onclick="downloadSignature('signAli', 'ali-signature.png')">تحميل</button>
     </div>
 
     <div class="signature-block">
       <p><strong>توقيع ياسمين:</strong></p>
-      <canvas id="signYasmeen" width="600" height="150"></canvas>
+      <canvas id="signYasmeen"></canvas>
       <button onclick="clearCanvas('signYasmeen')">مسح</button>
       <button onclick="downloadSignature('signYasmeen', 'yasmeen-signature.png')">تحميل</button>
     </div>
@@ -118,8 +118,15 @@
   </div>
 
   <script>
+    function fixCanvasResolution(canvas) {
+      const rect = canvas.getBoundingClientRect();
+      canvas.width = rect.width;
+      canvas.height = rect.height;
+    }
+
     function enableDrawing(canvasId) {
       const canvas = document.getElementById(canvasId);
+      fixCanvasResolution(canvas);
       const ctx = canvas.getContext("2d");
       let drawing = false;
 
@@ -160,13 +167,11 @@
         ctx.closePath();
       };
 
-      // Mouse events
       canvas.addEventListener("mousedown", start);
       canvas.addEventListener("mousemove", move);
       canvas.addEventListener("mouseup", stop);
       canvas.addEventListener("mouseleave", stop);
 
-      // Touch events
       canvas.addEventListener("touchstart", start, { passive: false });
       canvas.addEventListener("touchmove", move, { passive: false });
       canvas.addEventListener("touchend", stop);
@@ -174,7 +179,8 @@
 
     function clearCanvas(id) {
       const canvas = document.getElementById(id);
-      canvas.getContext("2d").clearRect(0, 0, canvas.width, canvas.height);
+      const ctx = canvas.getContext("2d");
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
     }
 
     function downloadSignature(id, filename) {
